@@ -19,7 +19,7 @@ class KdVWindowed:
         eta=1.0,
         mu2=0.022 ** 2,
         num_modes=10,
-        width=128,
+        width=30,
         depth=4,
     ):
         self.x_min = x_min
