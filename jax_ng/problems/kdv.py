@@ -15,7 +15,7 @@ class KdVWindowed:
         x_min=-1.0,
         x_max=1.0,
         dt_window=1.0,
-        n_windows=1,
+        n_windows=5,
         eta=1.0,
         mu2=0.022 ** 2,
         num_modes=10,
