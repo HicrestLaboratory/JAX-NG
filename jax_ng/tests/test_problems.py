@@ -11,6 +11,7 @@ from jax_ng.problems.kovasznay    import Kovasznay
 from jax_ng.problems.kdv          import KdVWindowed
 from jax_ng.problems.ks1d         import KS1DWindowed
 from jax_ng.problems.stokes_wedge import StokesWedge
+from jax_ng.problems.beltrami     import Beltrami3D
 
 
 class TestHelmholtz:
@@ -101,3 +102,15 @@ class TestStokesWedge:
         assert r_bnd.shape == (2,)
         assert r_anc.shape == (1,)
 
+
+class TestBeltrami3D:
+    def test_shapes(self):
+        pde = Beltrami3D(Re=1.0)
+        params = pde.init_params(width=16, depth=2, key=random.PRNGKey(0))
+        x = jnp.array([0.2, -0.1, 0.3, -0.4])
+        r_int = pde.interior_res(params, x)
+        r_bnd = pde.boundary_res(params, x)
+        uvw = pde.exact_velocity(x)
+        assert r_int.shape == (4,)
+        assert r_bnd.shape == (3,)
+        assert uvw.shape == (3,)

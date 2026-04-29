@@ -32,14 +32,18 @@ JAX-NG is designed as a research codebase for building and evaluating second-ord
 - Helmholtz
 - Kovasznay
 - KdV with windowed hard-IC ansatz
+- KS1d with windowed hard-IC ansatz
 - Stokes wedge with pressure anchor
+- Beltrami 3D (space-time Navier-Stokes benchmark)
 
 ### Example Scripts
 
 - `jax_ng/examples/helmholtz_gn.py`
 - `jax_ng/examples/kovasznay_gn.py`
 - `jax_ng/examples/kdv_windowed_gn.py`
+- `jax_ng/examples/ks1d_windowed_gn.py`
 - `jax_ng/examples/stokes_gn.py`
+- `jax_ng/examples/beltrami_gn.py`
 
 ## Repository Layout
 
@@ -49,7 +53,7 @@ jax_ng/
   samplers/      # box and triangle/wedge samplers
   linesearch/    # grid, Armijo, Wolfe, fixed-step rules
   optimizers/    # gauss_newton, multistage, windowed_gn, stokes_gn
-  problems/      # helmholtz, kovasznay, kdv, ks1d, stokes_wedge
+  problems/      # helmholtz, kovasznay, kdv, ks1d, stokes_wedge, beltrami
   utils/         # trainer, metrics, checkpointing, plotting
   examples/      # runnable scripts
   tests/         # pytest suite
