@@ -20,9 +20,9 @@ def main():
 
     parser = argparse.ArgumentParser(description="KdV windowed GN example")
     parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument("--iterations", type=int, default=5000)
-    parser.add_argument("--n_collocation", type=int, default=30000)
-    parser.add_argument("--print_every", type=int, default=500)
+    parser.add_argument("--iterations", type=int, default=2000)
+    parser.add_argument("--n_collocation", type=int, default=20000)
+    parser.add_argument("--print_every", type=int, default=100)
     parser.add_argument("--data_path", type=str, default=str(default_data_path))
     parser.add_argument("--output_dir", type=str, default=str(default_output_dir))
     args = parser.parse_args()
