@@ -14,7 +14,6 @@ JAX-NG is designed as a research codebase for building and evaluating second-ord
 
 - Modular JAX implementation for second-order PINN optimization
 - Gauss-Newton solvers with automatic primal/dual system selection
-- Support for multi-stage and windowed optimization workflows
 - Problem implementations covering elliptic, fluid, and time-dependent PDEs
 - Example scripts for reproducing supported experiments
 
@@ -41,8 +40,6 @@ JAX-NG is designed as a research codebase for building and evaluating second-ord
 - `jax_ng/examples/helmholtz_gn.py`
 - `jax_ng/examples/kovasznay_gn.py`
 - `jax_ng/examples/kdv_windowed_gn.py`
-- `jax_ng/examples/ks1d_windowed_gn.py`
-- `jax_ng/examples/stokes_gn.py`
 - `jax_ng/examples/beltrami_gn.py`
 
 ## Repository Layout
@@ -61,9 +58,27 @@ jax_ng/
 
 ## Installation
 
-Clone the repository and install it in editable mode:
+For a clean setup, we recommend creating a fresh Conda environment first:
 
 ```bash
+conda create -n jax-ng python=3.11 -y
+conda activate jax-ng
+git clone https://github.com/HicrestLaboratory/JAX-NG.git
+cd JAX-NG
+pip install -e .
+```
+
+If the repository includes a `requirements.txt`, install it before the editable package install:
+
+```bash
+pip install -r requirements.txt
+pip install -e .
+```
+
+If you are using a CPU-only environment, a common setup is:
+
+```bash
+pip install --upgrade "jax[cpu]"
 pip install -e .
 ```
 
@@ -82,6 +97,55 @@ Some examples expect external data files under `./data`:
 - `st_flow.csv`
 
 Make sure these files are available before running the corresponding scripts.
+
+## Running Examples
+
+From the repository root, the bundled examples can be launched with:
+
+```bash
+python -m jax_ng.examples.helmholtz_gn
+python -m jax_ng.examples.kovasznay_gn
+python -m jax_ng.examples.kdv_windowed_gn
+python -m jax_ng.examples.ks1d_windowed_gn
+python -m jax_ng.examples.stokes_gn
+```
+
+The KdV, KS1d, and Stokes examples require the corresponding files in `./data`.
+
+## Running Tests
+
+Install `pytest` if needed:
+
+```bash
+pip install pytest
+```
+
+Then run the full test suite from the repository root:
+
+```bash
+pytest
+```
+
+You can also target the package tests directly:
+
+```bash
+pytest jax_ng/tests
+```
+
+For more verbose output:
+
+```bash
+pytest -v
+```
+
+## Sanity Checks
+
+After installation, the following quick checks are useful:
+
+```bash
+python -c "import jax_ng; print('jax_ng import OK')"
+python -c "import jax; print(jax.__version__)"
+```
 
 ## Quick Start
 
