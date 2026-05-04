@@ -19,13 +19,6 @@ JAX-NG is designed as a research codebase for building and evaluating second-ord
 
 ## Current Support
 
-### Optimizers
-
-- `GaussNewton`
-- `MultiStageGN`
-- `WindowedJacobiGN`
-- `StokesJacobiGN`
-
 ### Problems
 
 - Helmholtz
