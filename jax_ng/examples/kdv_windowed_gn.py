@@ -29,7 +29,8 @@ def main():
 
     os.makedirs(args.output_dir, exist_ok=True)
 
-    pde = problems.KdVWindowed(n_windows=5, width=30, depth=4)
+    pde = problems.KdVWindowed(dt_window=0.2, n_windows=5, width=30, depth=4)
+
     key = random.PRNGKey(args.seed)
     params = pde.init_params(key)
     stacked_past = pde.init_stacked_params(params)
