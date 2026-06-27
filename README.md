@@ -14,6 +14,7 @@ JAX-NG is designed as a research codebase for building and evaluating second-ord
 
 - Modular JAX implementation for second-order PINN optimization
 - Gauss-Newton solvers with automatic primal/dual system selection
+- Dual GN-PCG solver with sampled-column and Gaussian-sketch Nyström preconditioners
 - Problem implementations covering elliptic, fluid, and time-dependent PDEs
 - Example scripts for reproducing supported experiments
 
@@ -32,6 +33,7 @@ JAX-NG is designed as a research codebase for building and evaluating second-ord
 
 - `jax_ng/examples/helmholtz_gn.py`
 - `jax_ng/examples/kovasznay_gn.py`
+- `jax_ng/examples/kovasznay_dual_pcg_nystrom.py`
 - `jax_ng/examples/kdv_windowed_gn.py`
 - `jax_ng/examples/beltrami_gn.py`
 
@@ -42,7 +44,7 @@ jax_ng/
   models/        # activations, initialization, MLPs, jets
   samplers/      # box and triangle/wedge samplers
   linesearch/    # grid, Armijo, Wolfe, fixed-step rules
-  optimizers/    # gauss_newton, multistage, windowed_gn, stokes_gn
+  optimizers/    # gauss_newton, dual_pcg_nystrom, multistage, windowed_gn, stokes_gn
   problems/      # helmholtz, kovasznay, kdv, ks1d, stokes_wedge, beltrami
   utils/         # trainer, metrics, checkpointing, plotting
   examples/      # runnable scripts
@@ -98,6 +100,7 @@ From the repository root, the bundled examples can be launched with:
 ```bash
 python -m jax_ng.examples.helmholtz_gn
 python -m jax_ng.examples.kovasznay_gn
+python -m jax_ng.examples.kovasznay_dual_pcg_nystrom
 python -m jax_ng.examples.kdv_windowed_gn
 python -m jax_ng.examples.ks1d_windowed_gn
 python -m jax_ng.examples.stokes_gn
@@ -207,6 +210,32 @@ You can also force the system explicitly with:
 
 - `mode="dual"`
 - `mode="primal"`
+
+For larger residual-space systems, `optimizers.DualPCGNystrom` solves the damped
+dual Gauss-Newton system with PCG and optional Nyström preconditioning:
+
+```python
+cfg = optimizers.DualPCGNystromConfig(
+    damping=1e-8,
+    preconditioner="column_nystrom",  # "none", "sketch_nystrom", or "exact"
+)
+opt = optimizers.DualPCGNystrom(
+    interior_res_fn=pde.interior_res,
+    boundary_res_fn=pde.boundary_res,
+    sampler_fn=sampler,
+    linesearch_fn=ls,
+    solve_config=cfg,
+    int_res_dim=3,
+    bnd_res_dim=2,
+)
+```
+
+The Kovasznay PCG example exposes both Nyström variants:
+
+```bash
+python -m jax_ng.examples.kovasznay_dual_pcg_nystrom --preconditioner column_nystrom
+python -m jax_ng.examples.kovasznay_dual_pcg_nystrom --preconditioner sketch_nystrom
+```
 
 ## Intended Use
 

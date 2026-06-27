@@ -10,11 +10,19 @@ All optimizers share the interface::
 Submodules
 ----------
 gauss_newton   GaussNewton, SolveConfig
+dual_pcg_nystrom DualPCGNystrom, DualPCGNystromConfig
 multistage     MultiStageGN, PhaseConfig
 windowed_gn    WindowedJacobiGN
 stokes_gn      StokesJacobiGN
 """
 from jax_ng.optimizers.gauss_newton import GaussNewton, SolveConfig
+from jax_ng.optimizers.dual_pcg_nystrom import (
+    ColumnNystromConfig,
+    DualPCGNystrom,
+    DualPCGNystromConfig,
+    PCGConfig,
+    SketchNystromConfig,
+)
 from jax_ng.optimizers.multistage   import MultiStageGN, PhaseConfig
 from jax_ng.optimizers.windowed_gn  import WindowedJacobiGN
 from jax_ng.optimizers.stokes_gn    import StokesJacobiGN
@@ -41,12 +49,24 @@ def build(name: str, interior_res_fn, sampler_fn,
         extra = {k: v for k, v in kwargs.items() if k not in cfg_fields}
         return GaussNewton(interior_res_fn, boundary_res_fn, sampler_fn, ls,
                            solve_config=cfg, **extra)
+    elif name in ("dual_pcg_nystrom", "pcg_nystrom"):
+        from jax_ng.linesearch import grid_search
+        ls = linesearch_fn or grid_search
+        cfg_fields = DualPCGNystromConfig.__dataclass_fields__
+        cfg = DualPCGNystromConfig(**{k: v for k, v in kwargs.items() if k in cfg_fields})
+        extra = {k: v for k, v in kwargs.items() if k not in cfg_fields}
+        return DualPCGNystrom(interior_res_fn, boundary_res_fn, sampler_fn, ls,
+                              solve_config=cfg, **extra)
     else:
-        raise ValueError(f"Unknown optimizer '{name}'. Choose 'gauss_newton'.")
+        raise ValueError(
+            f"Unknown optimizer '{name}'. Choose 'gauss_newton' or 'dual_pcg_nystrom'."
+        )
 
 
 __all__ = [
     "GaussNewton", "SolveConfig",
+    "DualPCGNystrom", "DualPCGNystromConfig",
+    "PCGConfig", "ColumnNystromConfig", "SketchNystromConfig",
     "MultiStageGN", "PhaseConfig",
     "WindowedJacobiGN",
     "StokesJacobiGN",
